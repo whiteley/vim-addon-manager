@@ -92,7 +92,7 @@ if s:c.create_addon_info_handlers
       \ setlocal ft=addon-info
       \ | setlocal syntax=json
       \ | syn match Error "^\s*'"
-    autocmd BufWritePost *-addon-info.txt,addon-info.json call vam#ReadAddonInfo(expand('%'))
+    autocmd BufWritePost *-addon-info.txt,addon-info.json call vam#ReadJSON(expand('%'))
   augroup END
 endif
 
@@ -105,14 +105,14 @@ endfun
 
 " use join so that you can break the dict into multiple lines. This makes
 " reading it much easier
-fun! vam#ReadAddonInfo(path)
+fun! vam#ReadJSON(path)
 
   " don't add "b" because it'll read dos files as "\r\n" which will fail the
   " check and evaluate in eval. \r\n is checked out by some msys git
   " versions with strange settings
 
   " using eval is evil!
-  let body = join(readfile(a:path),"")
+  let body = join(readfile(a:path), "")
 
   if vam#VerifyIsJSON(body)
     let true=1
@@ -121,7 +121,7 @@ fun! vam#ReadAddonInfo(path)
     " using eval is now safe!
     return eval(body)
   else
-    call vam#Log( "Invalid JSON in ".a:path."!")
+    call vam#Log("Invalid JSON in ".a:path."!")
     return {}
   endif
 
@@ -163,7 +163,7 @@ endfun
 fun! vam#AddonInfo(name)
   let infoFile = vam#AddonInfoFile(a:name)
   return filereadable(infoFile)
-    \ ? vam#ReadAddonInfo(infoFile)
+    \ ? vam#ReadJSON(infoFile)
     \ : {}
 endfun
 

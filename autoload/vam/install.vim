@@ -36,7 +36,7 @@ fun! s:confirm(msg, ...)
   elseif a:0 && type(a:1) == type("")
     return call("confirm", [a:msg]+a:000)
   else
-    " Don't allow [y] with additional argument intentionally: it is too easy to 
+    " Don't allow [y] with additional argument intentionally: it is too easy to
     " overlook the dialog. So force users typing [s] instead
     return confirm(a:msg, a:0 ? "&No\nYe&s" : "&Yes\n&No") == 1+a:0
   endif
@@ -103,7 +103,7 @@ fun! vam#install#GetRepo(name, opts)
         " used
         call extend(maybe_fixes, vamkr#SuggestNewName(a:name))
       catch /Vim(call):E117:/
-        " If VAM-kr activation policy is never, then the above will yield 
+        " If VAM-kr activation policy is never, then the above will yield
         " unknown function error
       endtry
       call vam#Log(join(["No repository location info known for plugin ".a:name."."] + maybe_fixes,"\n"))
@@ -152,7 +152,7 @@ fun! vam#install#RunHook(hook, info, repository, pluginDir, opts)
   endif
   let hkey=a:hook.'-hook'
   if has_key(a:info, hkey)
-    execute substitute(substitute(substitute(substitute(a:info[hkey],
+    silent execute substitute(substitute(substitute(substitute(a:info[hkey],
           \'%d', 'a:pluginDir',  'g'),
           \'%r', 'a:repository', 'g'),
           \'%i', 'a:info',       'g'),
@@ -315,7 +315,7 @@ fun! vam#install#UpdateAddon(name)
   if !isdirectory(pluginDir)
     return 'missing'
   endif
-  " First, try updating using VCS. Return 1 if everything is ok, 0 if exception 
+  " First, try updating using VCS. Return 1 if everything is ok, 0 if exception
   " is thrown
   try
     let [r, oldVersion, newVersion, sdescr] = vam#vcs#Update(pluginDir)
@@ -425,8 +425,8 @@ fun! vam#install#KnownAddons(type)
   " from pool
   call extend(k, s:c.plugin_sources)
   " Disk completion using default plugin dir location.
-  " Don’t do this if plugin_root_dir contains newline on outdated vim: 
-  " split(glob) does not work properly in this case. Also don’t do this if we 
+  " Don’t do this if plugin_root_dir contains newline on outdated vim:
+  " split(glob) does not work properly in this case. Also don’t do this if we
   " require notinstalled plugins.
   if a:type isnot# 'notinstalled' &&
         \s:c.plugin_dir_by_name is# 'vam#DefaultPluginDirFromName'
@@ -443,11 +443,11 @@ endfun
 " Filters:
 " 1. Start of the name must be the same as completed name
 " 2. Part of the name must be the same as completed name
-" 3. User correctly entered start of the string, but punctuation characters 
+" 3. User correctly entered start of the string, but punctuation characters
 "    inside were mistaken. Also takes globs as '*'=~'[[:punct:]]'.
-" 4. There may be missing characters somewhere at the word boundary, but user 
+" 4. There may be missing characters somewhere at the word boundary, but user
 "    correctly entered start of the word
-" 5. There may be missing characters somewhere at the word boundary, but first 
+" 5. There may be missing characters somewhere at the word boundary, but first
 "    character is correct
 " 6. Name has completely wrong order of characters, but not the first character
 " 7. Punctuation characters inside string were mistaken.
@@ -485,7 +485,7 @@ fun! vam#install#FilterVariants(str, variants)
   for filter in vam#install#GetFilters(a:str)
     let newlist=[]
     call map(list, '('.filter.')?(add(r, v:val)):(add(newlist, v:val))')
-    " We already have enough results to show, so stop thinking that user needs 
+    " We already have enough results to show, so stop thinking that user needs
     " more variants
     if len(r)>8
       break
@@ -583,7 +583,7 @@ fun! vam#install#Checkout(targetDir, repository) abort
           \ )
   endif
   if vam#vcs#Checkout(a:targetDir, a:repository)
-    " Successfully checked out a repository. Leaving a comment here to indicate 
+    " Successfully checked out a repository. Leaving a comment here to indicate
     " that an if condition has a side effect of checking out a repository.
   else
     " archive based repositories - no VCS

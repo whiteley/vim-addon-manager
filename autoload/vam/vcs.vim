@@ -11,7 +11,7 @@ let s:c.scms = get(s:c, 'scms', {})
 " s:c.scms.{scm}.update are called with additional (repository), non-zero return
 "                       value indicates failure
 "
-" Both should contain list that looks like if you are going to do the job using 
+" Both should contain list that looks like if you are going to do the job using
 " `call call("call", s:scms.{scm}.{key})'.
 "
 " You can explicitely set executable location using
@@ -37,7 +37,7 @@ fun! vam#vcs#GitCheckoutFixDepth(repository, targetDir)
   endif
   let use_shallow_clone = use_shallow_clone && a:repository.url !~? 'code\.google\.com'
 
-  let git_checkout='git clone --recursive '.(use_shallow_clone ? '--depth 1' : '').' $.url $p'
+  let git_checkout='git clone --quiet --recursive '.(use_shallow_clone ? '--depth 1' : '').' $.url $p'
   return vam#utils#RunShell(git_checkout, a:repository, a:targetDir)
 endf
 
@@ -79,8 +79,8 @@ fun! vam#vcs#RunWithIncrementedRev(...)
 endfun
 
 fun! vam#vcs#MercurialLog(targetDir, oldVersion, newVersion)
-  " Note: this will show nothing if oldVersion is not an ancestor of 
-  "       a newVersion. Mercurial should not update with the above command in 
+  " Note: this will show nothing if oldVersion is not an ancestor of
+  "       a newVersion. Mercurial should not update with the above command in
   "       this case though.
   return call('vam#utils#System', ['hg log --template $ -R $p -r $', '{desc}\n', a:targetDir,
         \                          a:oldVersion.'..'.a:newVersion.' and not '.a:oldVersion])
@@ -192,7 +192,7 @@ fun! vam#vcs#SVNCheckout(repository, targetDir)
 endfun
 
 fun! vam#vcs#SubversionCheckout(repository, targetDir)
-  " Both mercurial and bazaar are slow in this case because they request full 
+  " Both mercurial and bazaar are slow in this case because they request full
   " changeset history from the server, while subversion does not.
   if executable('svn')
     return vam#vcs#SVNCheckout(a:repository, a:targetDir)

@@ -66,7 +66,7 @@ endfun
 fun! s:Cmd(expect_code_0, cmd) abort
   call vam#Log(a:cmd, 'PreProc')
   if s:c.shell_commands_run_method[-4:] is# 'bang'
-    execute '!'.a:cmd
+    silent execute '!'.a:cmd
   elseif s:c.shell_commands_run_method is# 'system'
     call vam#Log(system(a:cmd), 'None')
   else
@@ -197,10 +197,10 @@ fun! vam#utils#Unpack(archive, targetDir, ...)
         \   ? opts.target_dir
         \   : vam#utils#GuessFixDir(get(opts, 'script-type', 'plugin')))
 
-  " 7z renames .tbz, .tbz2, .tar.bz2 to .tar, but it preserves names stored by 
+  " 7z renames .tbz, .tbz2, .tar.bz2 to .tar, but it preserves names stored by
   " gzip (if any): if you do
   "   tar -cf ../abc.tar . && gzip ../abc.tar && mv ../abc.tar.gz ../def.tar.gz
-  " you will find that “7z x ../def.tar.gz” unpacks archive “abc.tar” because 
+  " you will find that “7z x ../def.tar.gz” unpacks archive “abc.tar” because
   " gzip stored its name.
   let use_7z=(!s:c.omit_7z && executable('7z'))
 
@@ -312,7 +312,7 @@ endfun
 " This emulatios tar --strip-components option (which is not present in 7z or
 " unzip)
 "
-" If num==-1, then StripComponents will strip only if it finds that there is 
+" If num==-1, then StripComponents will strip only if it finds that there is
 " only one directory that needs stripping
 fun! vam#utils#StripComponents(dir, num, keepdirs)
   let num = a:num
